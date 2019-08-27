@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CRSpradlin's Numeric Converter</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="w3.css" />
+</head>
+<body>
+    <style>
+        #alert-modal-close{
+            float: right;
+        }
+        .start-hidden {
+            display: none;
+        }
+        .table {
+            width: 75%;
+            margin: auto;
+            text-decoration: bold;
+        }
+        .table--text {
+            text-decoration: none;
+        }
+        .table--close {
+            float: right;
+        }
+    </style>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1 class="w3-center">IP Base Converter</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="input-group mb-9">
+                    <div class="input-group-prepend">
+                        <input id="ip1" type="text" class="input-group-text" />
+                    </div>
+                    <div class="input-group-append">
+                        <label class="input-group-text">.</label>
+                    </div>
+                    <div class="input-group-append">
+                        <input id="ip2" type="text" class="input-group-text" />
+                    </div>
+                    <div class="input-group-append">
+                        <label class="input-group-text">.</label>
+                    </div>
+                    <div class="input-group-append">
+                        <input id="ip3" type="text" class="input-group-text" />
+                    </div>
+                    <div class="input-group-append">
+                        <label class="input-group-text">.</label>
+                    </div> 
+                    <div class="input-group-append">
+                        <input id="ip4" type="text" class="input-group-text" />
+                    </div>
+                    <div class="input-group-append">
+                        <button onclick="if(!ip_convert_form())modal_alert('Invalid IP address!');" type="button" class="btn w3-hover-light-grey w3-green">Convert</button>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <h1 class="w3-center">Numeric Base Converter</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-group mb-4">
+                <div class="input-group-prepend">
+                    <label class="w3-dark-grey input-group-text" for="selection">Base and Value Inputs:</label>
+                </div>
+                <select onchange="clearTable()" class="custom-select input-group-append" id="selection">
+                    <option id="selection_none" value="none" selected>Choose...</option>
+                    <option id="selection_dec" value="dec">Decimal</option>
+                    <option id="selection_hex" value="hex">Hexadecimal</option>
+                    <option id="selection_bin" value="bin">Binary</option>
+                </select>
+                <div class="input-group-append">
+                       <input id="base_convert_form_input" onchange="clearTable()" type="text" class="input-group-append" placeholder="Enter Value"/>
+                </div>
+                <div class="input-group-append">
+                    <button onclick="if(!base_convert_form())modal_alert('Invalid number format!');" type="button" class="btn w3-hover-light-grey w3-green">Convert</button>
+                </div>
+            </div>
+        </div>
+        <div id="start-hidden" class="row w3-animate-opacity start-hidden">
+                <table class="table table-dark w3-round-large">
+                    <tbody>
+                    <tr>
+                            <td><span>Inputed Base: <div id="base0"></div></span></td>
+                            <td><span>Inputed Value: <div id="value0"></div></span></td>
+                        </tr>
+                        <tr>
+                            <td><span>Base: <div id="base1"></div></span></td>
+                            <td><span>Value: <div id="value1"></div></span></td>
+                        </tr>
+                        <tr>
+                            <td><span>Base: <div id="base2"></div></span></td>
+                            <td><span>Value: <div id="value2"></div></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            <div onclick="clearTable()" class="table--close w3-button w3-round-large w3-red w3-center">Clear</div>
+        </div>
+    </div>
+
+    <div id="alert-modal" class="w3-modal">
+        <div style="height:20%;" class="w3-modal-content w3-container w3-black">
+            <span id="alert-modal-close" onclick="document.getElementById('alert-modal').style.display='none'" class="w3-btn w3-padding w3-hover-red">X</span>
+            <br><div id="alert-modal-message" class="w3-padding-xlarge w3-center w3-display-middle"></div>
+        </div>
+    </div>
+
+
+<script>
+
+    function modal_alert(message) {
+        document.getElementById('alert-modal-message').innerHTML = message;
+        document.getElementById('alert-modal').style.display = 'block';
+    }    
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //IP Base Converter Code
+    function ip_convert_form(){
+        for(i=1; i<5; i++){
+            let element = document.getElementById("ip"+i);
+            if(isNaN(parseInt(element.value))) return false;
+        }
+        let decInRange = true;
+        let decToHexIP = "";
+        for(i=1; i<5; i++){
+            let element = document.getElementById("ip"+i);
+            element.value = element.value.toUpperCase();
+            if(!isNumberInRange(element.value, "dec")) decInRange = false;
+            console.log("inside both");
+            decToHexIP = decToHexIP + BinaryToHex(DecToBinary(element.value)) + ((i==4) ? "" : ":");
+        }
+        if(!decInRange) return false;
+        modal_alert("Decimal to Hexadecimal IP: " + (decInRange ? decToHexIP:"Decimal IP not in Range"));
+        return true;           
+    }
+    function isNumberInRange(num, base){
+        if(base=="hex"){
+            num = BinaryToDec(HexToBinary(num))
+        }
+        return (num<256 && num>-1);
+    } 
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Numeric Base Converter Code
+    function displayHidden(){
+        document.getElementById("start-hidden").style.display = "block";
+    }
+    function clearTable(){
+        document.getElementById("start-hidden").style.display = "none";
+        document.getElementById("base1").value = "";
+        document.getElementById("value1").value = "";
+        document.getElementById("base2").value = "";
+        document.getElementById("value2").value = "";
+    }
+    function getValue(){
+        try{
+            let output = document.getElementById("numField").value;
+        } catch(e) {
+            return false;
+        }
+        return output;
+    }
+    function isSelected(selection){
+        return document.getElementById(selection).selected;
+    }
+    function base_convert_form(){
+        clearTable();
+        let input = document.getElementById("base_convert_form_input").value;
+        input = input.toUpperCase()
+        let base1 = document.getElementById("base1");
+        let value1 = document.getElementById("value1");
+        let base2 = document.getElementById("base2");
+        let value2 = document.getElementById("value2");
+        document.getElementById("value0").innerHTML = input;
+        if(isSelected("selection_bin")){
+            if(isNaN(parseInt(input, 2)))
+                return false;
+            let dec = BinaryToDec(input);
+            let hex = BinaryToHex(input);
+            document.getElementById("base0").innerHTML = "Binary";
+            base1.innerHTML = "Decimal";
+            value1.innerHTML = dec;
+            base2.innerHTML = "Hexadecimal";
+            value2.innerHTML = hex;
+            displayHidden();
+        } else if(isSelected("selection_dec")){
+            if(isNaN(parseInt(input)))
+                return false;
+            let bin = DecToBinary(input);
+            let hex = BinaryToHex(bin);
+            document.getElementById("base0").innerHTML = "Decimal";
+            base1.innerHTML = "Hexadecimal";
+            value1.innerHTML = hex;
+            base2.innerHTML = "Binary";
+            value2.innerHTML = bin;
+            displayHidden();
+        } else if(isSelected("selection_hex")){
+            if(isNaN(parseInt(input, 16)))
+                return false;
+            let bin = HexToBinary(input);
+            let dec = BinaryToDec(bin);
+            document.getElementById("base0").innerHTML = "Hexadecimal";
+            base1.innerHTML = "Binary";
+            value1.innerHTML = bin;
+            base2.innerHTML = "Decimal";
+            value2.innerHTML = dec;
+            displayHidden();
+        } else {
+            modal_alert("Please make a base selection in the drop-down box.");
+        }
+        return true;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Conversions - Decided not to use any built in conversions except for parsing an integer from a string.
+    //            - Also used built in functions to test for formatting of the correct integer base.
+    function BinaryToHex(binaryStr){
+        if(binaryStr.length<=4){
+            return HexCharEncode(BinaryToDec(binaryStr));
+        } else {
+            return BinaryToHex(binaryStr.substr(0, binaryStr.length-4)) + HexCharEncode(BinaryToDec(binaryStr.substr(binaryStr.length-4, binaryStr.length)))
+        }
+    }
+    function HexCharEncode(decimal){
+        if(decimal<10){
+            return ""+decimal;
+        } else {
+            return ""+String.fromCharCode(55+decimal);
+        }
+    }
+    function HexToBinary(hexStr){
+        let decimal = 0;
+        if(hexStr.length<=0)
+            return "";
+        if(isNaN(hexStr.charAt(0))){
+            decimal = hexStr.charCodeAt(0)-55;
+        } else {
+            decimal = parseInt(hexStr.charAt(0));
+        }
+        let binarySection = DecToBinary(decimal);
+        while(binarySection.length<4){
+            binarySection = "0" + binarySection;
+        }
+        return binarySection +  HexToBinary(hexStr.substr(1));
+    }
+    function BinaryToDec(binaryStr){
+        let exp = binaryStr.length-1;
+        let addOn = 0;
+        console.log("string = " + binaryStr);
+        if(binaryStr=="0" || binaryStr.length==0)
+            return 0;
+        if(binaryStr=="1")
+            return 1;
+        if(parseInt(binaryStr.charAt(0)+"")){
+            addOn = Math.pow(2, exp);
+            console.log(2 + "^" + exp + "=" + addOn);
+        }		
+        return addOn + BinaryToDec(binaryStr.substr(1));
+    }
+    function DecToBinary(decimalNum){
+        console.log("current decimal num: " + decimalNum);
+        decimalNum = parseInt(decimalNum);
+        if(isNaN(decimalNum)){
+            modal_alert("Fatal error");
+            return "2";
+        }
+        if(decimalNum==0){
+            return "0";
+        }
+        else if(decimalNum==1){
+            return "1";
+        }
+        else {
+            if(decimalNum%2==0){
+                return DecToBinary(parseInt(decimalNum/2))+"0";
+            } else {
+                return DecToBinary(parseInt(decimalNum/2))+"1";
+            }
+        }
+    }
+
+</script>
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>
