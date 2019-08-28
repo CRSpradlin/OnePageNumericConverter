@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>CRSpradlin's Numeric Converter</title>
+    <link rel="icon" href="https://www.crspradlin.org/Logo.png" type="image/png" sizes="256x256">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
 </head>
@@ -30,6 +31,7 @@
         <div class="row">
             <div class="col">
                 <h1 class="w3-center">IP Base Converter</h1>
+                <p class="w3-center">Type each byte of your IPv4 address below, in the corresponding fields in decimal format, then click convert to view the hexadecimal conversion for your address.</p>
             </div>
         </div>
         <div class="row">
@@ -65,15 +67,17 @@
         <div class="row">
             <div class="col">
                 <h1 class="w3-center">Numeric Base Converter</h1>
+                <p class="w3-center">Select the numeric base for your input in the drop down menu, then type your input into the text box to the right of the drop down menu, then hit convert to see all other numeric base conversions of your input.</p>
             </div>
         </div>
+        <br>
         <div class="row">
             <div class="input-group mb-4">
                 <div class="input-group-prepend">
                     <label class="w3-dark-grey input-group-text" for="selection">Base and Value Inputs:</label>
                 </div>
                 <select onchange="clearTable()" class="custom-select input-group-append" id="selection">
-                    <option id="selection_none" value="none" selected>Choose...</option>
+                    <option id="selection_none" value="none" selected>Choose Your Base...</option>
                     <option id="selection_dec" value="dec">Decimal</option>
                     <option id="selection_hex" value="hex">Hexadecimal</option>
                     <option id="selection_bin" value="bin">Binary</option>
